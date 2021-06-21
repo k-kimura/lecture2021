@@ -17,6 +17,7 @@
 (defvar *init* nil)
 (defvar *head-swing* nil)
 (defvar *imu-show-state* nil)
+(defvar *invpend-mode* nil)
 (defun isnan (v) (and  (< v 0) (> v 0)))
 (defun my_step nil
   (when (= -1 (wb_robot_step TIME_STEP))
@@ -278,6 +279,7 @@
    ("f" (setq *flutter* (not *flutter*)))
    ("h" (setq *head-swing* (not *head-swing*)))
    ("i" (setq *imu-show-state* (not *imu-show-state*)))
+   ("!" (setq *invpend-mode* (not *invpend-mode*)))
    ("J" (send! *robot* :fly -500))
    ("j" (send! *robot* :fly 500))
    ("n" (send! *robot* :neutral))
@@ -387,7 +389,8 @@
   (do-until-key (main-step)))
 (defun main-step nil
   (my_step)
-  (read-webots)
+  ;; (read-webots)
+  (invpend-step)
   (recognition-step *camera0*)
   (recognition-step *camera1*)
   (head-swing)
@@ -412,3 +415,7 @@
   (itimer-on))
 
 
+(warn "~%")
+(load "invpend-control.l")
+(warn "~%")
+(load "pedal-racer-control.l")
